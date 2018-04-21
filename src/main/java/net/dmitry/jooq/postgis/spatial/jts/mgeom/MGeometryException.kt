@@ -18,44 +18,21 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package net.dmitry.jooq.postgis.spatial.jts.mgeom;
+package net.dmitry.jooq.postgis.spatial.jts.mgeom
 
 /**
  * @author Karel Maesen
  */
-public class MGeometryException extends Exception {
+data class MGeometryException @JvmOverloads constructor(
+        val type: MGeometryExceptionType = MGeometryExceptionType.GENERAL_MGEOMETRY_EXCEPTION,
+        override val message: String = "",
+        override val cause: Throwable? = null
+) : Exception(message, cause) {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
-
-	public final static int OPERATION_REQUIRES_MONOTONE = 1;
-
-	public final static int UNIONM_ON_DISJOINT_MLINESTRINGS = 2;
-
-	public final static int GENERAL_MGEOMETRY_EXCEPTION = 0;
-
-	// type of exception
-	private final int type;
-
-	public MGeometryException(String s) {
-		super(s);
-		type = 0;
-	}
-
-	public MGeometryException(int type) {
-		super();
-		this.type = type;
-	}
-
-	public MGeometryException(int type, String msg) {
-		super(msg);
-		this.type = type;
-	}
-
-	public int getType() {
-		return type;
-	}
+    enum class MGeometryExceptionType {
+        OPERATION_REQUIRES_MONOTONE,
+        UNIONM_ON_DISJOINT_MLINESTRINGS,
+        GENERAL_MGEOMETRY_EXCEPTION
+    }
 
 }

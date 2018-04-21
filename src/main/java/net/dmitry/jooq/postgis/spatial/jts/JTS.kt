@@ -18,27 +18,17 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package net.dmitry.jooq.postgis.spatial.jts;
+package net.dmitry.jooq.postgis.spatial.jts
 
-import net.dmitry.jooq.postgis.spatial.jts.mgeom.MGeometryFactory;
+import net.dmitry.jooq.postgis.spatial.jts.mgeom.MGeometryFactory
 
 /**
  * A static utility class
  *
  * @author Karel Maesen
  */
-public class JTS {
+object JTS {
 
-	private static MGeometryFactory defaultGeomFactory = new MGeometryFactory();
-
-	/**
-	 * Make sure nobody can instantiate this class
-	 */
-	private JTS() {
-	}
-
-	public static MGeometryFactory getDefaultGeomFactory() {
-		return defaultGeomFactory;
-	}
+    val defaultGeomFactory = MGeometryFactory()
 
 }
