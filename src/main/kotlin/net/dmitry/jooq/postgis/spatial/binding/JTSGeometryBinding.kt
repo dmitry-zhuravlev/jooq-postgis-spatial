@@ -1,6 +1,6 @@
 package net.dmitry.jooq.postgis.spatial.binding
 
-import com.vividsolutions.jts.geom.Geometry
+import org.locationtech.jts.geom.Geometry
 import net.dmitry.jooq.postgis.spatial.converter.JTSGeometryConverter
 import org.jooq.*
 import org.jooq.impl.DSL
@@ -11,7 +11,7 @@ import org.jooq.impl.DSL
  */
 class JTSGeometryBinding : Binding<Any, Geometry> {
 
-    private val geometryConverter = JTSGeometryConverter();
+    private val geometryConverter = JTSGeometryConverter()
 
     override fun converter(): Converter<Any, Geometry>? = geometryConverter
 
@@ -20,11 +20,11 @@ class JTSGeometryBinding : Binding<Any, Geometry> {
     }
 
     override fun get(ctx: BindingGetStatementContext<Geometry>?) {
-        ctx?.convert(converter())?.value(ctx.statement().getObject(ctx.index()));
+        ctx?.convert(converter())?.value(ctx.statement().getObject(ctx.index()))
     }
 
     override fun get(ctx: BindingGetResultSetContext<Geometry>?) {
-        ctx?.convert(converter())?.value(ctx.resultSet().getObject(ctx.index()));
+        ctx?.convert(converter())?.value(ctx.resultSet().getObject(ctx.index()))
     }
 
     override fun sql(ctx: BindingSQLContext<Geometry>?) {

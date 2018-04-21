@@ -18,27 +18,23 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package net.dmitry.jooq.postgis.spatial.jts;
-
-import net.dmitry.jooq.postgis.spatial.jts.mgeom.MGeometryFactory;
+package net.dmitry.jooq.postgis.spatial.jts.mgeom
 
 /**
- * A static utility class
- *
  * @author Karel Maesen
  */
-public class JTS {
+sealed class MGeometryException @JvmOverloads constructor(
+        override val message: String = "",
+        override val cause: Throwable? = null
+) : Exception(message, cause) {
 
-	private static MGeometryFactory defaultGeomFactory = new MGeometryFactory();
+    data class MonotoneRequiredException(override val message: String = "Operation requires geometry with monotonic measures",
+                                         override val cause: Throwable? = null) : MGeometryException(message, cause)
 
-	/**
-	 * Make sure nobody can instantiate this class
-	 */
-	private JTS() {
-	}
+    data class UnionOnDisjointLineStrException(override val message: String = "",
+                                               override val cause: Throwable? = null) : MGeometryException(message, cause)
 
-	public static MGeometryFactory getDefaultGeomFactory() {
-		return defaultGeomFactory;
-	}
+    data class GeneralMGeometryException(override val message: String = "",
+                                         override val cause: Throwable? = null) : MGeometryException(message, cause)
 
 }
