@@ -57,7 +57,7 @@ constructor (MlineStrings: Array<MLineString> = arrayOf(), val mGap: Double // d
         if (this.isEmpty) {
             return
         }
-        var mdir = MGeometry.CONSTANT
+        var mdir = MGeometry.MeasureDirection.CONSTANT
         for (i in this.geometries.indices) {
             val ml = this.geometries[0] as MLineString
             if (!ml.isEmpty) {
@@ -74,7 +74,7 @@ constructor (MlineStrings: Array<MLineString> = arrayOf(), val mGap: Double // d
             // and
             // are monotone
             if (!ml.isMonotone(false) || ml.measureDirection != mdir && ml
-                            .measureDirection != MGeometry.CONSTANT) {
+                            .measureDirection != MGeometry.MeasureDirection.CONSTANT) {
                 this.monotone = false
                 break
             }
@@ -88,7 +88,7 @@ constructor (MlineStrings: Array<MLineString> = arrayOf(), val mGap: Double // d
             // are inconsistent with previous parts
             if (i > 0) {
                 val mlp = this.geometries[i - 1] as MLineString
-                if (mdir == MGeometry.INCREASING) {
+                if (mdir == MGeometry.MeasureDirection.INCREASING) {
                     if (mlp.maxM > ml.minM) {
                         monotone = false
                     } else if (mlp.maxM >= ml.minM) {
@@ -123,9 +123,7 @@ constructor (MlineStrings: Array<MLineString> = arrayOf(), val mGap: Double // d
     override fun getMatCoordinate(co: Coordinate, tolerance: Double): Double {
 
         if (!this.isMonotone(false)) {
-            throw MGeometryException(
-                    MGeometryException.MGeometryExceptionType.OPERATION_REQUIRES_MONOTONE
-            )
+            throw MGeometryException.MonotoneRequiredException()
         }
 
         var mval = java.lang.Double.NaN
@@ -184,9 +182,7 @@ constructor (MlineStrings: Array<MLineString> = arrayOf(), val mGap: Double // d
     override fun getCoordinateAtM(m: Double): Coordinate? {
 
         if (!this.isMonotone(false)) {
-            throw MGeometryException(
-                    MGeometryException.MGeometryExceptionType.OPERATION_REQUIRES_MONOTONE
-            )
+            throw MGeometryException.MonotoneRequiredException()
         }
 
         var c: Coordinate?
@@ -204,10 +200,7 @@ constructor (MlineStrings: Array<MLineString> = arrayOf(), val mGap: Double // d
     override fun getCoordinatesBetween(begin: Double, end: Double): Array<out CoordinateSequence> {
 
         if (!this.isMonotone(false)) {
-            throw MGeometryException(
-                    MGeometryException.MGeometryExceptionType.OPERATION_REQUIRES_MONOTONE,
-                    "Operation requires geometry with monotonic measures"
-            )
+            throw MGeometryException.MonotoneRequiredException()
         }
 
         if (this.isEmpty) {

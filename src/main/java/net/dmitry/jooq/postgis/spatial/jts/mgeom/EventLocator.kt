@@ -48,14 +48,7 @@ object EventLocator {
                           begin: Double, end: Double): MultiMLineString {
         val factory = lrs.factory
         val cs = lrs.getCoordinatesBetween(begin, end)
-        val linestrings = ArrayList<MLineString>(cs.size)
-        for (i in cs.indices) {
-            val ml: MLineString
-            if (cs[i].size() >= 2) {
-                ml = factory.createMLineString(cs[i])
-                linestrings.add(ml)
-            }
-        }
+        val linestrings = cs.filter { it.size() >= 2 }.map { factory.createMLineString(it) }
         val result = factory.createMultiMLineString(linestrings.toTypedArray())
         copySRID(lrs.asGeometry(), result.asGeometry())
         return result

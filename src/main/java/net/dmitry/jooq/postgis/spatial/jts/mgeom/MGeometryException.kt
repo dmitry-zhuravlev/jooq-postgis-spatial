@@ -23,16 +23,18 @@ package net.dmitry.jooq.postgis.spatial.jts.mgeom
 /**
  * @author Karel Maesen
  */
-data class MGeometryException @JvmOverloads constructor(
-        val type: MGeometryExceptionType = MGeometryExceptionType.GENERAL_MGEOMETRY_EXCEPTION,
+sealed class MGeometryException @JvmOverloads constructor(
         override val message: String = "",
         override val cause: Throwable? = null
 ) : Exception(message, cause) {
 
-    enum class MGeometryExceptionType {
-        OPERATION_REQUIRES_MONOTONE,
-        UNIONM_ON_DISJOINT_MLINESTRINGS,
-        GENERAL_MGEOMETRY_EXCEPTION
-    }
+    data class MonotoneRequiredException(override val message: String = "Operation requires geometry with monotonic measures",
+                                         override val cause: Throwable? = null) : MGeometryException(message, cause)
+
+    data class UnionOnDisjointLineStrException(override val message: String = "",
+                                               override val cause: Throwable? = null) : MGeometryException(message, cause)
+
+    data class GeneralMGeometryException(override val message: String = "",
+                                         override val cause: Throwable? = null) : MGeometryException(message, cause)
 
 }

@@ -57,10 +57,10 @@ class MCoordinate : Coordinate {
     }
 
     constructor(coord: Coordinate) : super(coord) {
-        if (coord is MCoordinate) {
-            m = coord.m
+        m = if (coord is MCoordinate) {
+            coord.m
         } else {
-            m = java.lang.Double.NaN
+            java.lang.Double.NaN
         }
     }
 
@@ -125,9 +125,7 @@ class MCoordinate : Coordinate {
          * `coordinate` parameter
          */
         fun convertCoordinate(coordinate: Coordinate?): MCoordinate? {
-            return if (coordinate == null) {
-                null
-            } else coordinate as? MCoordinate ?: MCoordinate(coordinate)
+            return if (coordinate == null) null else MCoordinate(coordinate)
         }
 
         /**

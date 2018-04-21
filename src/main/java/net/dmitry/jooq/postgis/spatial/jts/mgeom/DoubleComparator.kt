@@ -64,8 +64,7 @@ object DoubleComparator {
             return machinePrecision
         }
 
-    private val defaultNumericalPrecision = Math
-            .sqrt(machinePrecision)
+    private val defaultNumericalPrecision = Math.sqrt(machinePrecision)
 
     @JvmOverloads
     fun equals(a: Double, b: Double, precision: Double = defaultNumericalPrecision): Boolean {
@@ -78,8 +77,6 @@ object DoubleComparator {
     fun main(args: Array<String>) {
         println("Machine precision = $machinePrecision")
         println("Radix = $radix")
-        println(
-                "default numerical precision = $defaultNumericalPrecision"
-        )
+        println("default numerical precision = $defaultNumericalPrecision")
     }
 }

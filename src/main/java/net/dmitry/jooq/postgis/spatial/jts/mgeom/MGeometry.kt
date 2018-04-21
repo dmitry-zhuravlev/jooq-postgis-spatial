@@ -35,7 +35,7 @@ import java.io.Serializable
 
 interface MGeometry : Cloneable, Serializable {
 
-    val factory : MGeometryFactory
+    val factory: MGeometryFactory
 
     /**
      * Returns the minimum M-value of the MGeometry
@@ -146,27 +146,25 @@ interface MGeometry : Cloneable, Serializable {
      */
     fun asGeometry(): Geometry
 
-    companion object {
-
+    enum class MeasureDirection(val id: Int) {
         /**
          * Measures are increasing in the direction of the MGeometry
          */
-        val INCREASING = 1
+        INCREASING(1),
 
         /**
          * Measures are constant across the Geometry
          */
-        val CONSTANT = 0
+        CONSTANT(0),
 
         /**
          * Measures are decreasing in the direction of the MGeometry
          */
-        val DECREASING = -1
+        DECREASING(-1),
 
         /**
          * Measures are not monotone along the Geometry
          */
-        val NON_MONOTONE = -3
+        NON_MONOTONE(-3)
     }
-
 }

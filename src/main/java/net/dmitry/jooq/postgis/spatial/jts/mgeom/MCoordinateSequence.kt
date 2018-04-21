@@ -171,9 +171,7 @@ class MCoordinateSequence : CoordinateSequence, Serializable {
     }
 
     override fun expandEnvelope(env: Envelope): Envelope {
-        for (i in coordinates.indices) {
-            env.expandToInclude(coordinates[i])
-        }
+        coordinates.forEach { env.expandToInclude(it) }
         return env
     }
 
@@ -197,17 +195,15 @@ class MCoordinateSequence : CoordinateSequence, Serializable {
         private const val serialVersionUID = 1L
 
         fun copy(coordinates: Array<Coordinate>): Array<MCoordinate> {
-            val copy = Array(coordinates.size) { i ->
+            return Array(coordinates.size) { i ->
                 MCoordinate(coordinates[i])
             }
-            return copy
         }
 
         fun copy(coordSeq: CoordinateSequence): Array<MCoordinate> {
-            val copy = Array(coordSeq.size()) { i ->
+            return Array(coordSeq.size()) { i ->
                 MCoordinate(coordSeq.getCoordinate(i))
             }
-            return copy
         }
     }
 }

@@ -55,21 +55,21 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
      * MGeometry.DECREASING<BR></BR>
      * MGeometry.CONSTANT
      */
-    val measureDirection: Int
+    val measureDirection: MGeometry.MeasureDirection
         get() {
             if (!this.monotone) {
-                return MGeometry.NON_MONOTONE
+                return MGeometry.MeasureDirection.NON_MONOTONE
             }
             val c1 = this.getCoordinateN(0) as MCoordinate
             val c2 = this
                     .getCoordinateN(this.numPoints - 1) as MCoordinate
 
             return if (c1.m < c2.m) {
-                MGeometry.INCREASING
+                MGeometry.MeasureDirection.INCREASING
             } else if (c1.m > c2.m) {
-                MGeometry.DECREASING
+                MGeometry.MeasureDirection.DECREASING
             } else {
-                MGeometry.CONSTANT
+                MGeometry.MeasureDirection.CONSTANT
             }
         }
 
@@ -179,17 +179,15 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
     @Throws(MGeometryException::class)
     fun getClosestPoint(co: Coordinate, tolerance: Double): MCoordinate? {
         if (!this.isMonotone(false)) {
-            throw MGeometryException(
-                    MGeometryException.MGeometryExceptionType.OPERATION_REQUIRES_MONOTONE
-            )
+            throw MGeometryException.MonotoneRequiredException()
         }
 
         if (!this.isEmpty) {
             val seg = LineSegment()
             val coAr = this.coordinates
             seg.p0 = coAr[0]
-            var d = 0.0
-            var projfact = 0.0
+            var d: Double
+            var projfact: Double
             var minDist = java.lang.Double.POSITIVE_INFINITY
             var mincp: MCoordinate? = null
             for (i in 1 until coAr.size) {
@@ -226,9 +224,7 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
     @Throws(MGeometryException::class)
     override fun getCoordinateAtM(m: Double): Coordinate? {
         if (!this.isMonotone(false)) {
-            throw MGeometryException(
-                    MGeometryException.MGeometryExceptionType.OPERATION_REQUIRES_MONOTONE
-            )
+            throw MGeometryException.MonotoneRequiredException()
         }
         if (this.isEmpty) {
             return null
@@ -309,10 +305,10 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
             } else {
                 val measures = this.measures
 
-                if (this.measureDirection == MGeometry.INCREASING) {
-                    return measures!![measures.size - 1]
-                } else if (this.measureDirection == MGeometry.DECREASING || this.measureDirection == MGeometry.CONSTANT) {
-                    return measures!![0]
+                return if (this.measureDirection == MGeometry.MeasureDirection.INCREASING) {
+                    measures!![measures.size - 1]
+                } else if (this.measureDirection == MGeometry.MeasureDirection.DECREASING || this.measureDirection == MGeometry.MeasureDirection.CONSTANT) {
+                    measures!![0]
                 } else {
                     var ma = java.lang.Double.NEGATIVE_INFINITY
                     for (i in measures!!.indices) {
@@ -320,7 +316,7 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
                             ma = measures[i]
                         }
                     }
-                    return ma
+                    ma
                 }
             }
         }
@@ -344,7 +340,7 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
      * @param direction    INCREASING or DECREASING
      * @return a CoordinateSubSequence containing the coordinates between fromM and toM
      */
-    private fun copyCoordinatesBetween(mcoordinates: Array<MCoordinate>, fromM: Double, toM: Double, direction: Int): CoordinateSubSequence {
+    private fun copyCoordinatesBetween(mcoordinates: Array<MCoordinate>, fromM: Double, toM: Double, direction: MGeometry.MeasureDirection): CoordinateSubSequence {
         val sseq = CoordinateSubSequence()
         sseq.firstIndex = -1
         sseq.lastIndex = -1
@@ -357,7 +353,7 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
                     sseq.firstIndex = i
                 }
             }
-            if (direction == MGeometry.INCREASING) {
+            if (direction == MGeometry.MeasureDirection.INCREASING) {
                 if (m > toM) {
                     break
                 }
@@ -404,10 +400,7 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
     @Throws(MGeometryException::class)
     override fun getCoordinatesBetween(fromM: Double, toM: Double): Array<out CoordinateSequence> {
         if (!this.isMonotone(false)) {
-            throw MGeometryException(
-                    MGeometryException.MGeometryExceptionType.OPERATION_REQUIRES_MONOTONE,
-                    "Operation requires geometry with monotonic measures"
-            )
+            throw MGeometryException.MonotoneRequiredException()
         }
 
         if (fromM > toM) {
@@ -444,7 +437,7 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
 
     private fun addInterpolatedEndPoints(fromM: Double, toM: Double, mcoordinates: Array<MCoordinate>, subsequence: CoordinateSubSequence) {
 
-        val increasing = this.measureDirection == MGeometry.INCREASING
+        val increasing = this.measureDirection == MGeometry.MeasureDirection.INCREASING
         val fM: Double
         val lM: Double
         if (increasing) {
@@ -506,9 +499,9 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
                 return java.lang.Double.NaN
             } else {
                 val a = this.measures
-                if (this.measureDirection == MGeometry.INCREASING) {
+                if (this.measureDirection == MGeometry.MeasureDirection.INCREASING) {
                     return a!![0]
-                } else if (this.measureDirection == MGeometry.DECREASING || this.measureDirection == MGeometry.CONSTANT) {
+                } else if (this.measureDirection == MGeometry.MeasureDirection.DECREASING || this.measureDirection == MGeometry.MeasureDirection.CONSTANT) {
                     return a!![a.size - 1]
                 } else {
 
@@ -672,16 +665,14 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
     fun unionM(l: MLineString): MLineString {
 
         if (!this.monotone || !l.monotone) {
-            throw MGeometryException(
-                    MGeometryException.MGeometryExceptionType.OPERATION_REQUIRES_MONOTONE
-            )
+            throw MGeometryException.MonotoneRequiredException()
         }
         val linecoar = l.coordinates
-        if (l.measureDirection == MGeometry.DECREASING) {
+        if (l.measureDirection == MGeometry.MeasureDirection.DECREASING) {
             CoordinateArrays.reverse(linecoar)
         }
         val thiscoar = this.coordinates
-        if (this.measureDirection == MGeometry.DECREASING) {
+        if (this.measureDirection == MGeometry.MeasureDirection.DECREASING) {
             CoordinateArrays.reverse(thiscoar)
         }
 
@@ -706,9 +697,7 @@ class MLineString(points: CoordinateSequence, factory: GeometryFactory) : LineSt
                     thiscoar.size - 1
             )
         } else {
-            throw MGeometryException(
-                    MGeometryException.MGeometryExceptionType.UNIONM_ON_DISJOINT_MLINESTRINGS
-            )
+            throw MGeometryException.UnionOnDisjointLineStrException()
         }
 
         val mcs = super.factory

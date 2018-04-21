@@ -30,10 +30,11 @@ import org.locationtech.jts.geom.PrecisionModel
  *
  * @see org.locationtech.jts.geom.GeometryFactory
  */
-class MGeometryFactory : GeometryFactory {
-
-    @JvmOverloads constructor(precisionModel: PrecisionModel = PrecisionModel(), SRID: Int = 0,
-                              coordinateSequenceFactory: MCoordinateSequenceFactory = MCoordinateSequenceFactory) : super(precisionModel, SRID, coordinateSequenceFactory)
+class MGeometryFactory @JvmOverloads constructor(
+        precisionModel: PrecisionModel = PrecisionModel(),
+        srid: Int = 0,
+        coordinateSequenceFactory: MCoordinateSequenceFactory = MCoordinateSequenceFactory
+) : GeometryFactory(precisionModel, srid, coordinateSequenceFactory) {
 
     /**
      * Constructs a MLineString using the given Coordinates; a null or empty
@@ -53,13 +54,10 @@ class MGeometryFactory : GeometryFactory {
         )
     }
 
+    @JvmOverloads
     fun createMultiMLineString(mlines: Array<MLineString>,
-                               mGap: Double): MultiMLineString {
+                               mGap: Double = 0.0): MultiMLineString {
         return MultiMLineString(mlines, mGap, this)
-    }
-
-    fun createMultiMLineString(mlines: Array<MLineString>): MultiMLineString {
-        return MultiMLineString(mlines, 0.0, this)
     }
 
     /**

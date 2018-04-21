@@ -38,9 +38,7 @@ object MCoordinateSequenceFactory : CoordinateSequenceFactory, Serializable {
      * copied.
      */
     override fun create(coordinates: Array<Coordinate>): CoordinateSequence {
-        return MCoordinateSequence(
-                    coordinates as Array<MCoordinate>
-        )
+        return MCoordinateSequence(coordinates.map { MCoordinate.convertCoordinate(it) }.filterNotNull().toTypedArray())
     }
 
     override fun create(coordSeq: CoordinateSequence): CoordinateSequence {
