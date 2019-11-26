@@ -12,7 +12,7 @@ jooq-postgis-spatial
             <customType>
                 <name>Geometry</name>
                 <type>com.vividsolutions.jts.geom.Geometry</type>
-                <binding>org.jooq.postgis.spatial.JTSGeometryBinding</binding>
+                <binding>net.dmitry.jooq.postgis.spatial.binding.JTSGeometryBinding</binding>
             </customType>
         </customTypes>
         <forcedTypes>
@@ -30,7 +30,7 @@ jooq-postgis-spatial
             <customType>
                 <name>Geometry</name>
                 <type>com.vividsolutions.jts.geom.Geometry</type>
-                <binding>org.jooq.postgis.spatial.PostgisGeometryBinding</binding>
+                <binding>net.dmitry.jooq.postgis.spatial.PostgisGeometryBinding</binding>
             </customType>
         </customTypes>
         <forcedTypes>
