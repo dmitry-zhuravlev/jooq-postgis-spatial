@@ -4,6 +4,7 @@ import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.GeometryFactory
 import net.dmitry.jooq.postgis.spatial.jts.JTS
+import net.dmitry.jooq.postgis.spatial.jts.PostgisGeometryConverter
 import net.dmitry.jooq.postgis.spatial.jts.mgeom.MCoordinate
 import net.dmitry.jooq.postgis.spatial.jts.mgeom.MGeometry
 import net.dmitry.jooq.postgis.spatial.jts.mgeom.MGeometryFactory
@@ -17,7 +18,8 @@ import org.postgis.*
  */
 class JTSGeometryConverter : Converter<Any, Geometry> {
 
-    private val postgisGeometryConverter = PostgisGeometryConverter()
+    private val postgisGeometryConverter =
+        PostgisGeometryConverter()
 
     override fun from(obj: Any?): Geometry? = toJTS(postgisGeometryConverter.from(obj))
 
@@ -33,7 +35,7 @@ class JTSGeometryConverter : Converter<Any, Geometry> {
     }
 
 
-    fun toJTS(obj: Any?): Geometry? {
+    public fun toJTS(obj: Any?): Geometry? {
         var objNotNull = obj ?: return null
         // in some cases, Postgis returns not PGgeometry objects
         // but org.postgis.Geometry instances.
@@ -222,7 +224,7 @@ class JTSGeometryConverter : Converter<Any, Geometry> {
      * *
      * @return native database geometry object corresponding to jtsGeom.
      */
-    protected fun toNative(jtsGeom: Geometry): PGgeometry {
+    public fun toNative(jtsGeom: Geometry): PGgeometry {
         val jtsGeomNotNull = forceEmptyToGeometryCollection(jtsGeom)
         val geom: org.postgis.Geometry? = when (jtsGeomNotNull) {
             is org.locationtech.jts.geom.Point -> {
