@@ -63,6 +63,7 @@
                     <target>${compileSource}</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -70,7 +71,6 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
@@ -98,12 +98,12 @@
     </build>
 
     <properties>
-        <compileSource>1.8</compileSource>
+        <compileSource>16</compileSource>
         <kotlin.version>1.5.21</kotlin.version>
-        <postgresql.version>9.4-1201-jdbc4</postgresql.version>
-        <jooq.version>3.7.3</jooq.version>
-        <jts.version>1.18.1</jts.version>
-        <postgis-jdbc.version>2.2.0</postgis-jdbc.version>
+        <postgresql.version>42.2.14</postgresql.version>
+        <jooq.version>3.15.1</jooq.version>
+        <jts.version>1.18.2</jts.version>
+        <postgis-jdbc.version>2.5.1</postgis-jdbc.version>
     </properties>
 
 
