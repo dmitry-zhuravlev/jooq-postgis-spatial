@@ -99,7 +99,7 @@
 
     <properties>
         <compileSource>1.8</compileSource>
-        <kotlin.version>1.5.21</kotlin.version>
+        <kotlin.version>1.6.0</kotlin.version>
         <postgresql.version>9.4-1201-jdbc4</postgresql.version>
         <jooq.version>3.7.3</jooq.version>
         <jts.version>1.18.1</jts.version>
