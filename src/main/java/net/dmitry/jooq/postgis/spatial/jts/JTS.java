@@ -41,4 +41,7 @@ public class JTS {
 		return defaultGeomFactory;
 	}
 
+	public static void setDefaultGeomFactory(MGeometryFactory defaultGeomFactory) {
+		this.defaultGeomFactory = defaultGeomFactory;
+	}
 }
